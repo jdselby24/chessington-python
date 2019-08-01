@@ -49,8 +49,13 @@ class Pawn(Piece):
         single_move = Square.at(currentLoc.row + positionDelta, currentLoc.col)
         double_move = Square.at(currentLoc.row + positionDelta * 2, currentLoc.col)
 
-        moves = []
+        diagonal_move_1 = Square.at(currentLoc.row + positionDelta, currentLoc.col + positionDelta)
+        diagonal_move_2 = Square.at(currentLoc.row + positionDelta, currentLoc.col - positionDelta)
 
+        
+
+        # Standard Forward moves
+        moves = []
         if board.squareInBounds(single_move) and board.squareInBounds(double_move):
 
             if board.get_piece(single_move) is None:
@@ -59,7 +64,18 @@ class Pawn(Piece):
                 if (board.get_piece(double_move) is None) and not self.moved:
                     moves.append(double_move)
 
-        return moves
+        capturingMoves = []
+        if board.squareInBounds(diagonal_move_1) and board.squareInBounds(diagonal_move_2):
+            piece1 = board.get_piece(diagonal_move_1)
+            piece2 = board.get_piece(diagonal_move_2)
+
+            if piece1 is not None and piece1.player != self.player:
+                capturingMoves.append(diagonal_move_1)
+
+            if piece2 is not None and piece2.player != self.player:
+                capturingMoves.append(diagonal_move_2)
+
+        return moves + capturingMoves
 
 
 class Knight(Piece):
