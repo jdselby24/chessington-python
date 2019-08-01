@@ -50,10 +50,12 @@ class Pawn(Piece):
         double_move = Square.at(currentLoc.row + positionDelta * 2, currentLoc.col)
 
         moves = []
-        moves.append(single_move)
 
-        if not self.moved:
-            moves.append(double_move)
+        if board.get_piece(single_move) != Piece:
+            moves.append(single_move)
+
+        if (board.get_piece(double_move) != Piece) and not self.moved:
+           moves.append(double_move)
 
         return moves
 
