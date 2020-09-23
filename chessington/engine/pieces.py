@@ -13,6 +13,7 @@ class Piece(ABC):
 
     def __init__(self, player):
         self.player = player
+        self.moved = False
 
     @abstractmethod
     def get_available_moves(self, board):
@@ -22,6 +23,7 @@ class Piece(ABC):
         pass
 
     def move_to(self, board, new_square):
+        self.moved = True
         """
         Move this piece to the given square on the board.
         """
@@ -35,17 +37,24 @@ class Pawn(Piece):
     """
 
     def get_available_moves(self, board):
+        
         positionDelta = 0
+        currentLoc = board.find_piece(self)
+
         if self.player == Player.WHITE: 
             positionDelta = 1 
         else:
             positionDelta = -1
 
-        currentLoc = board.find_piece(self)
+        single_move = Square.at(currentLoc.row + positionDelta, currentLoc.col)
+        double_move = Square.at(currentLoc.row + positionDelta * 2, currentLoc.col)
 
-        single_move_square = Square.at(currentLoc.row + positionDelta, currentLoc.col)
-        print(single_move_square)
-        moves = [single_move_square]
+        moves = []
+        moves.append(single_move)
+
+        if not self.moved:
+            moves.append(double_move)
+
         return moves
 
 
