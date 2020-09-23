@@ -51,11 +51,13 @@ class Pawn(Piece):
 
         moves = []
 
-        if board.get_piece(single_move) is None:
-            moves.append(single_move)
+        if board.squareInBounds(single_move) and board.squareInBounds(double_move):
 
-            if (board.get_piece(double_move) is None) and not self.moved:
-                moves.append(double_move)
+            if board.get_piece(single_move) is None:
+                moves.append(single_move)
+
+                if (board.get_piece(double_move) is None) and not self.moved:
+                    moves.append(double_move)
 
         return moves
 
