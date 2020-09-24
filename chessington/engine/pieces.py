@@ -30,6 +30,14 @@ class Piece(ABC):
         current_square = board.find_piece(self)
         board.move_piece(current_square, new_square)
 
+    def pieceCapturable(self, piece):
+        return piece.player != self.player
+
+    def isCapturable(self, board, square):
+        return (board.squareInBounds(square) and not board.squareEmpty(square) and self.pieceCapturable(board.get_piece(square)))
+
+    def isFreeOrCapturable(self, board, square):
+        return board.squareInBounds(square) and (board.squareEmpty(square) or self.pieceCapturable(board.get_piece(square)))
 
 class Pawn(Piece):
     """
@@ -84,8 +92,26 @@ class Knight(Piece):
     """
 
     def get_available_moves(self, board):
-        return []
+        loc = board.find_piece(self)
+        row, col = loc.row, loc.col
 
+        possibleMoves = [
+            Square.at(row + 2, col + 1), 
+            Square.at(row + 2, col - 1),
+            Square.at(row + 1, col + 2), 
+            Square.at(row + 1, col - 2),
+            Square.at(row - 2, col + 1),
+            Square.at(row - 2, col - 1),
+            Square.at(row - 1, col + 2), 
+            Square.at(row - 1, col - 2)
+        ]
+
+        validMoves = []
+        for move in possibleMoves:
+            if(self.isFreeOrCapturable(board, move)):
+                validMoves.append(move)
+
+        return validMoves
 
 class Bishop(Piece):
     """

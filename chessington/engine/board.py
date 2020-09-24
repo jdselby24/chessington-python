@@ -80,3 +80,6 @@ class Board:
 
     def squareInBounds(self, square):
             return 0 <= square.row < BOARD_SIZE and 0 <= square.col < BOARD_SIZE
+
+    def squareEmpty(self, square):
+        return self.get_piece(square) is None
